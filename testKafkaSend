@@ -1,0 +1,13 @@
+import os
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--conf spark.ui.port=4041 --packages org.apache.kafka:kafka_2.11:0.10.0.0,org.apache.kafka:kafka-clients:0.10.0.0  pyspark-shell'
+
+from pyspark import SparkContext
+sc = SparkContext("local[1]", "KafkaSendStream") 
+from kafka import KafkaProducer
+import time
+
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+while True:
+    message=time.strftime("%Y-%m-%d %H:%M:%S")
+    producer.send('test', message)
+    time.sleep(1)
